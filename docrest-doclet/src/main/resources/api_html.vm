@@ -1,0 +1,198 @@
+<html>
+    <head>
+	<title>REST API documentation</title>
+        <link rel="stylesheet" href="api.css" type="text/css" />
+    </head>
+    <body>
+<!-- Table of Contents ---------------------------------------------------->
+    	<h1>Content</h1>
+    	<ul>
+#foreach( $resource in $resources )
+            <li>
+#foreach( $rp in $resource.paths )
+#if( $velocityCount > 1),&nbsp;#end<a href="api.html#${resource.classDoc.qualifiedName()}" class="link">/${rp}</a>
+#end
+                <ul>
+#foreach( $method in $resource.methods )
+                    <li><a href="api.html#${resource.classDoc.qualifiedName()}.${method.name}" class="link">${method.name}()</a></li>
+#end
+                </ul>
+            </li>
+#end
+            <li>JSON objects
+                <ul>
+#foreach( $entry in $jsonMap.entrySet() )
+                    <li><a href="api.html#${entry.key}" class="link">${entry.key}</a></li>
+#end
+                </ul>
+            </li>
+        </ul>
+#foreach( $resource in $resources )
+<!-- Resource: /person ---------------------------------------------------->
+    <h1 class="resourceHeader">
+#foreach( $rp in $resource.paths )
+#if( $velocityCount > 1),&nbsp;#end/${rp}
+#end
+    </h1>
+
+    <a name="${resource.classDoc.qualifiedName()}" />
+
+    <p class="concreteClass">
+            <b>Description</b>: ${resource.classDoc.commentText()}
+    </p>
+
+    <p class="concreteClass">
+            <b>Concrete class</b>: ${resource.classDoc.qualifiedName()}
+    </p>
+
+#foreach( $method in $resource.methods )
+<!-- Method: findByName() ---------------------------------------------------->		
+        <a name="${resource.classDoc.qualifiedName()}.${method.name}" />
+
+        <h2 class="methodHeader">${method.name}()</h2>
+
+        <p>
+            <b>Description</b>:${method.methodDoc.commentText()}
+        </p>
+
+        <p>
+            <b>Implementing Class</b>: ${method.classDoc.qualifiedName()}
+        </p>
+
+        <p class="restPath">
+            <b>REST path</b>: ${method.method}&nbsp;
+#foreach( $rp in $resource.paths )
+#if( $velocityCount > 1),&nbsp;#end
+#foreach( $mp in $method.paths )
+#if( $velocityCount > 1),&nbsp;#end
+    /${rp}/${mp}
+#end
+#end
+
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+#set( $hasNoRows = true )
+#foreach( $param in $method.pathVariables )
+#set( $hasNoRows = false )
+                            <tr>
+                                <td>path</td><td>${param.name}</td><td>${param.type}</td><td>${param.comment}</td>
+                            </tr>
+#end
+#foreach( $param in $method.parameters )
+#set( $hasNoRows = false )
+                            <tr>
+                                <td>query</td><td>${param.name}</td><td>${param.type}</td><td>${param.comment}</td>
+                            </tr>
+#end
+#if( $method.body )
+#set( $hasNoRows = false )
+                            <tr>
+                                <td>body</td><td>${method.body.name}</td><td>${helper.renderType($method.body.type)}</td><td>${method.body.comment}</td>
+                            </tr>
+#end
+#foreach( $param in $method.modelAttributes )
+#set( $hasNoRows = false )
+                            <tr>
+                                <td>body (properties separately)</td><td>${param.name}</td><td>${param.type}</td><td>${param.comment}</td>
+                            </tr>
+#end
+#if( $hasNoRows )
+                            <tr>
+                                <td>-</td><td>-</td><td>-</td><td>-</td>
+                            </tr>
+#end
+			</tbody>
+		</table>
+
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+#set( $hasNoRows = true )
+#foreach( $element in $method.restReturn.elementValues() )
+#if( $element.element().name() == "code" )
+#set( $codes = $element.value().value() )
+#foreach( $code in $codes )
+#set( $responseMessage = "" )
+#foreach( $e in $code.value().elementValues() )
+#if( $e.element().name() == "code" ) #set( $responseCode = $e.value().value() ) #end
+#if( $e.element().name() == "description" ) #set( $responseDescription = $e.value().value() ) #end
+#if( $e.element().name() == "message" ) #set( $responseMessage = $e.value().value() ) #end
+#end
+#set( $hasNoRows = false )
+            <tr>
+                <td>${responseCode}</td><td>${responseMessage}</td><td colspan="2">${responseDescription}</td>
+            </tr>
+#end
+#end
+#end
+#if( $hasNoRows )
+            <tr>
+                <td>-</td><td>-</td><td colspan="2">-</td>
+            </tr>
+#end
+				</tbody>
+			</table>
+
+			<p>
+                            <b>Response Type</b>: ${helper.renderType($encoder.escapeHtml($method.returnType))}
+                        </p>
+
+		<h3>Response Example</h3>
+		<p class="code">
+			<pre>${method.json}</pre>
+		</p>
+				
+#end
+#end
+
+
+    <h1 class="resourceHeader">JSON Objects</h1>
+
+#foreach( $entry in $jsonDoc.entrySet() )
+<!-- JSON object: ${entry.key} ---------------------------------------------------->		
+        <a name="${entry.key}" />
+        <h2 class="methodHeader">${entry.key}</h2>
+		<table>
+			<thead>
+	    		<td class="column1">Name</th>
+	    		<td class="column2">Type</th>
+	    		<td class="column3">Description</th>
+			</thead>
+			<tbody>
+ 
+#set( $jd = $entry.value )
+#foreach( $m in $jd.methods(false) )
+#if( $helper.isGetter($m.name()) )
+#set( $memberName = $helper.getMemberName($m.name()) )
+#set( $memberType = $m.returnType().qualifiedTypeName() )
+                        <tr>
+                            <td>${memberName}</td>
+                            <td>${helper.renderType($memberType)}</td>
+                            <td>
+#foreach( $f in $jd.fields(false) )
+#if( $f.name() == $memberName )
+${f.commentText()}
+#end
+#end
+                            </td>
+                        </tr>
+#end
+#end
+                        </tbody>
+               </table>
+#end
+
+    </body>
+</html>

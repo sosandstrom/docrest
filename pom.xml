@@ -1,0 +1,24 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.wadpam</groupId>
+    <artifactId>docrest</artifactId>
+    <packaging>pom</packaging>
+    <version>1.15</version>
+    <name>${project.groupId}:${project.artifactId}</name>
+
+    <modules>
+	    <module>docrest-api</module>
+	    <module>docrest-doclet</module>
+    </modules>
+    
+    <distributionManagement>
+            <repository>
+                    <id>nexus-releases</id>
+                    <name>nexus-releases</name>
+                    <url>http://maven.goldengekko.com:8001/nexus/content/repositories/releases</url>
+            </repository>
+    </distributionManagement>
+    
+</project>

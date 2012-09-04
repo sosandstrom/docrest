@@ -1,0 +1,565 @@
+<html>
+    <head>
+	<title>REST API documentation</title>
+        <link rel="stylesheet" href="style.css" type="text/css" />
+    </head>
+    <body>
+<!-- Table of Contents ---------------------------------------------------->
+    	<h1>Content</h1>
+    	<ul>
+    		<li><a href="api.html#person" class="link">/person</a>
+    			<ul>
+    				<li><a href="api.html#person.findByName">findByName()</a></li>
+    				<li><a href="api.html#person.delete">delete()</a></li>
+    				<li><a href="api.html#person.findAll">findAll()</a></li>
+    				<li><a href="api.html#person.first">first()</a></li>
+    			</ul>
+    		</li>
+    		<li><a href="api.html#venue" class="link">/venue</a>
+    			<ul>
+    				<li><a href="api.html#venue.findByName">findByName()</a></li>
+    				<li><a href="api.html#venue.update">update()</a></li>
+    				<li><a href="api.html#venue.delete">delete()</a></li>
+    				<li><a href="api.html#venue.last">last()</a></li>
+    				<li><a href="api.html#venue.findAll">findAll()</a></li>
+    				<li><a href="api.html#venue.first">first()</a></li>
+    			</ul>
+    		</li>
+    	</ul>
+
+<!-- Resource: /person ---------------------------------------------------->
+		<h1 class="resourceHeader">/person</h1>
+		<a name="person" />
+		
+		<p class="concreteClass">
+			<b>Concrete class</b>: com.wadpam.docrest.test.PersonController
+		</p>
+
+<!-- Method: findByName() ---------------------------------------------------->		
+		<a name="person.findByName" />
+		<h2 class="methodHeader">findByName()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.PersonController</p>
+		<p class="restPath"><b>REST path:</b> GET /person/{name}</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>path</td>
+	    			<td>name</td>
+	    			<td>String</td>
+	    			<td></td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>200</td>
+	    				<td></td>
+	    				<td colspan="2">When found</td>
+					</tr>
+	   				<tr>
+	    				<td>404</td>
+	    				<td>NOT FOUND</td>
+	    				<td colspan="2">When no user exists for specified name</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> com.wadpam.docrest.test.Venue</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			{<br>
+				&nbsp;&nbsp;&nbsp;<b>"id"</b>:String,<br>
+				&nbsp;&nbsp;&nbsp;<b>"name"</b>:String,<br>
+				&nbsp;&nbsp;&nbsp;<b>"establishedYear"</b>:int,<br>
+				&nbsp;&nbsp;&nbsp;<b>"location"</b>:{<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"latitude"</b>:double,<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"longitude"</b>:double<br>
+				&nbsp;&nbsp;&nbsp;}<br>
+			}
+		</p>
+				
+<!-- Method: delete() ---------------------------------------------------->		
+
+		<a name="person.delete" />
+		<h2 class="methodHeader">delete()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.PersonController</p>
+		<p class="restPath"><b>REST path:</b> DELETE /person/{id}</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>path</td>
+	    			<td>id</td>
+	    			<td>String</td>
+	    			<td></td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>-</td>
+	    				<td>-</td>
+	    				<td colspan="2">-</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> ${encoder.escapeHtml($method.returnType)}</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			${method.json}
+		</p>
+
+<!-- Method: findAll() ---------------------------------------------------->		
+
+		<a name="person.findByName" />
+		<h2 class="methodHeader">findAll()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.AbstractController</p>
+		<p class="restPath"><b>REST path:</b> GET /person/</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>query</td>
+	    			<td>offset</td>
+	    			<td>int</td>
+	    			<td>skip this number of entities before returning. Used for paging. Default is 0.</td>
+				</tr>
+				<tr>
+	    			<td>query</td>
+	    			<td>limit</td>
+	    			<td>int</td>
+	    			<td>return this number of entities. Used for paging. Default is 10.</td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>-</td>
+	    				<td>-</td>
+	    				<td colspan="2">-</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> java.util.List<com.wadpam.docrest.test.Venue></p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			[{<br>
+			&nbsp;&nbsp;&nbsp;<b>"id"</b>:String,</br />
+			&nbsp;&nbsp;&nbsp;<b>"name"</b>:String,<br />
+			&nbsp;&nbsp;&nbsp;<b>"establishedYear"</b>:int,<br />
+			&nbsp;&nbsp;&nbsp;<b>"location"</b>:{<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"latitude"</b>:double,<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>"longitude"</b>:double<br />
+			&nbsp;&nbsp;&nbsp;}<br />
+			},
+			...<br />
+			]
+		</p>
+		
+<!-- Method: first() ---------------------------------------------------->
+
+		<a name="person.first" />
+		<h2 class="methodHeader">first()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.AbstractController</p>
+		<p class="restPath"><b>REST path:</b> GET /person/1st</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>-</td>
+	    			<td>-</td>
+	    			<td>-</td>
+	    			<td>-</td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>200</td>
+	    				<td>-</td>
+	    				<td colspan="2">When a first Entity exists</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> org.springframework.http.ResponseEntity</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			{<br>
+   			&nbsp;&nbsp;&nbsp;"statusCode":HttpStatus<br>
+			}
+		</p>
+<!-- Resource: /venue ---------------------------------------------------->
+		<h1 class="resourceHeader">/venue</h1>
+		<a name="venue" />
+		
+		<p class="concreteClass">
+			<b>Concrete class</b>: com.wadpam.docrest.test.VenueController
+		</p>
+
+<!-- Method: findByName() ---------------------------------------------------->		
+		<a name="venue.findByName" />
+		<h2 class="methodHeader">findByName()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.VenueController</p>
+		<p class="restPath"><b>REST path:</b> GET /venue/{name}</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>path</td>
+	    			<td>name</td>
+	    			<td>String</td>
+	    			<td></td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>-</td>
+	    				<td>-</td>
+	    				<td colspan="2">-</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> ${encoder.escapeHtml($method.returnType)}</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			${method.json}
+		</p>
+				
+<!-- Method: update() ---------------------------------------------------->		
+
+		<a name="venue.update" />
+		<h2 class="methodHeader">update()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.VenueController</p>
+		<p class="restPath"><b>REST path:</b> POST /venue/{id}</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>path</td>
+	    			<td>id</td>
+	    			<td>String</td>
+	    			<td>The Venue id</td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>-</td>
+	    				<td>-</td>
+	    				<td colspan="2">-</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> ${encoder.escapeHtml($method.returnType)}</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			${method.json}
+		</p>
+
+<!-- Method: delete() ---------------------------------------------------->	
+		<a name="venue.delete" />
+		<h2 class="methodHeader">delete()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.VenueController</p>
+		<p class="restPath"><b>REST path:</b> DELETE /venue/{id}</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>path</td>
+	    			<td>id</td>
+	    			<td>String</td>
+	    			<td></td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>-</td>
+	    				<td>-</td>
+	    				<td colspan="2">-</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> ${encoder.escapeHtml($method.returnType)}</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			${method.json}
+		</p>
+
+<!-- Method: last() ---------------------------------------------------->
+
+		<a name="venue.last" />
+		<h2 class="methodHeader">last()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.VenueController</p>
+		<p class="restPath"><b>REST path:</b> GET /venue/</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>-</td>
+	    			<td>-</td>
+	    			<td>-</td>
+	    			<td>-</td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>-</td>
+	    				<td>-</td>
+	    				<td colspan="2">-</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> ${encoder.escapeHtml($method.returnType)}</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			${method.json}
+		</p>
+
+<!-- Method: findAll() ---------------------------------------------------->		
+
+		<a name="venue.findAll" />
+		<h2 class="methodHeader">findAll()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.AbstractController</p>
+		<p class="restPath"><b>REST path:</b> GET /venue/</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>query</td>
+	    			<td>offset</td>
+	    			<td>int</td>
+	    			<td>skip this number of entities before returning. Used for paging. Default is 0.</td>
+				</tr>
+				<tr>
+	    			<td>query</td>
+	    			<td>limit</td>
+	    			<td>int</td>
+	    			<td>return this number of entities. Used for paging. Default is 10.</td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>-</td>
+	    				<td>-</td>
+	    				<td colspan="2">-</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> java.util.List<null></p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			[,<br>
+			...<br>
+			]
+		</p>
+		
+<!-- Method: first() ---------------------------------------------------->
+
+		<a name="venue.first" />
+		<h2 class="methodHeader">first()</h2>
+		<p><b>Implementing Class:</b> com.wadpam.docrest.test.AbstractController</p>
+		<p class="restPath"><b>REST path:</b> GET /venue/1st</p>
+		
+	
+		<h3>Request parameters</h3>
+		<table>
+			<thead>
+	    		<td class="column1">Where</th>
+	    		<td class="column2">Name</th>
+	    		<td class="column3">Type</th>
+	    		<td class="columnAuto">Description</th>
+			</thead>
+			<tbody>
+				<tr>
+	    			<td>-</td>
+	    			<td>-</td>
+	    			<td>-</td>
+	    			<td>-</td>
+				</tr>
+			</tbody>
+		</table>
+	
+		<h3>Response Codes</h3>
+			<table>
+				<thead>
+	   				<td class="column1">HTTP Response Code</td>
+	   				<td class="column2">Message</td>
+	   				<td class="columnAuto">Description</td>
+				</thead>
+				<tbody>
+	  				<tr>
+	    				<td>200</td>
+	    				<td>-</td>
+	    				<td colspan="2">When a first Entity exists</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Response Type:</b> org.springframework.http.ResponseEntity</p>
+	
+		<h3>Response Example</h3>
+		<p class="code">
+			{<br>
+   			&nbsp;&nbsp;&nbsp;"statusCode":HttpStatus<br>
+			}
+		</p>
+
+	<br><br>
+    </body>
+</html>

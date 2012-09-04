@@ -1,0 +1,34 @@
+/* 
+    Document   : unused
+    Created on : Dec 6, 2011, 2:12:42 PM
+    Author     : os
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+table {
+    padding-left: 10px;
+    padding-right: 10px;
+    border-spacing: 10px;
+}
+
+.id {
+    
+}
+
+a {
+    
+}
+
+#data {
+    color: red;
+}
