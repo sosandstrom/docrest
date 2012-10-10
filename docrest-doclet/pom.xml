@@ -4,7 +4,7 @@
     <groupId>com.wadpam</groupId>
     <artifactId>docrest-doclet</artifactId>
     <packaging>jar</packaging>
-    <version>1.17</version>
+    <version>1.18-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     
     <properties>
@@ -37,7 +37,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.8</version>
                 <configuration>
-                    <additionalparam>-basePath http://localhost:8080/swagger/ -baseUrl http://localhost:8080/api/testenv/</additionalparam>
+                    <additionalparam>-basePath http://127.0.0.1/restAPItests -baseUrl http://localhost:8080/api/testenv</additionalparam>
                     <author>false</author>
                     <doclet>com.wadpam.docrest.DocRestDoclet</doclet>
                     <docletArtifact>
@@ -122,13 +122,5 @@
         </profile>
     	
     </profiles>
-    
-	<distributionManagement>
-		<repository>
-			<id>nexus-releases</id>
-			<name>nexus-releases</name>
-			<url>http://maven.goldengekko.com:8001/nexus/content/repositories/releases</url>
-		</repository>
-	</distributionManagement>
     
 </project>

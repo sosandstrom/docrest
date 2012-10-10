@@ -5,7 +5,7 @@
     <groupId>com.wadpam</groupId>
     <artifactId>docrest</artifactId>
     <packaging>pom</packaging>
-    <version>1.17</version>
+    <version>1.18-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <modules>
@@ -13,12 +13,25 @@
 	    <module>docrest-doclet</module>
     </modules>
     
-    <distributionManagement>
+<!--    <distributionManagement>
             <repository>
                     <id>nexus-releases</id>
                     <name>nexus-releases</name>
                     <url>http://maven.goldengekko.com:8001/nexus/content/repositories/releases</url>
             </repository>
-    </distributionManagement>
-    
+    </distributionManagement>-->
+
+    <developers>
+        <developer>
+            <id>sosandstrom</id>
+            <name>Ola Sandstrom</name>
+            <email>s.o.sandstrom@gmail.com</email>
+            <url>http://www.linkedin.com/in/sosandstrom</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/sosandstrom/docrest</url>
+        <developerConnection>scm:git:ssh://git@github.com/sosandstrom/docrest.git</developerConnection>
+    </scm>
 </project>

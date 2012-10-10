@@ -3,23 +3,98 @@
     "swaggerVersion": "1.1",
     "basePath": "${baseUrl}",
     "apis": [
-#foreach( $entry in $resource.operationsMap.entrySet() )#if( $velocityCount > 1),#end
-
-        {
-            "path": "${entry.key}",
-            "description": "${resource.classDoc.commentText()}",
-            "operations": [
-
-#foreach( $method in $entry.value )#if( $velocityCount > 1),#end
-                {
-                    "httpMethod": "${method.method}",
-                    "nickname": "${method.name}"
-                }
+#foreach( $resource in $resources )
+#if( $velocityCount > 1),#end
+#foreach( $method in $resource.methods )
+#if( $velocityCount > 1),#end
+#foreach( $rp in $resource.paths )
+#if( $velocityCount > 1),#end
+#foreach( $mp in $method.paths )
+#if( $velocityCount > 1),#end
+			{
+	         "path": "/${rp}/${mp}",
+	         "description": "${resource.classDoc.qualifiedName()}",
+	         "operations": [
+	             {
+	                 "httpMethod": "${method.method}",
+	                 "nickname": "${method.name}",
+							"notes": "${method.methodDoc.commentText()}",
+							"summary":"${method.methodDoc.commentText()}()",
+							"parameters":[
+#set( $foo = "" )
+#foreach( $param in $method.pathVariables )
+#if( $velocityCount > 1),#end
+{
+		"name":"${param.name}"
+		,"description":"${param.comment}"
+		,"required":true,"dataType":"${param.type}"
+		,"allowMultiple":false,"paramType":"path"
+}
+#set( $foo = "," )
 #end
-            ]
-        }
+
+#foreach( $param in $method.parameters )
+#if( $velocityCount > 1),#end
+$foo
+#set( $foo = "" )
+{
+		"name":"${param.name}"
+		,"description":"${param.comment}"
+		,"required":true,"dataType":"${param.type}"
+		,"allowMultiple":false,"paramType":"query"
+}
 #end
+							],
+							"errorResponses":[
+#set( $foo = "" )
+#foreach( $element in $method.restReturn.elementValues() )
+#if( $element.element().name() == "code" )
+#set( $codes = $element.value().value() )
+#foreach( $code in $codes )
+#set( $responseMessage = "" )
+#foreach( $e in $code.value().elementValues() )
+#if( $e.element().name() == "code" ) #set( $responseCode = $e.value().value() ) #end
+#if( $e.element().name() == "description" ) #set( $responseDescription = $e.value().value() ) #end
+#if( $e.element().name() == "message" ) #set( $responseMessage = $e.value().value() ) #end
+#end
+								$foo{"reason":"${responseMessage}"
+								,"code":${responseCode}}
+#set( $foo = "," )
+#end
+#end
+#end
+							],
+"responseTypeInternal":"${method.returnType}"
+
+	             }
+	         ]
+			}
+#end
+#end
+#end
+#end
+
     ],
     "models":{
+#foreach( $entry in $jsonDoc.entrySet() )
+#if( $velocityCount > 1),#end
+"${entry.key} -- ${entry.value}":{
+	"properties":{
+#set( $jd = $entry.value )
+#set( $foo = "" )
+#foreach( $m in $jd.methods(false) )
+#if( $helper.isGetter($m.name()) )
+#set( $memberName = $helper.getMemberName($m.name()) )
+#set( $memberType = $m.returnType().qualifiedTypeName() )
+    $foo"${memberName}":{"type":"${memberType}"}
+#set( $foo = "," )
+#end
+#end
+	}
+}
+#end
+
+
+
     }
 }

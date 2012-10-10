@@ -5,7 +5,7 @@
     <groupId>com.wadpam</groupId>
     <artifactId>docrest-api</artifactId>
     <packaging>jar</packaging>
-    <version>1.17</version>
+    <version>1.18-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     
     <build>
@@ -33,13 +33,5 @@
     
     <dependencies>
     </dependencies>
-    
-    <distributionManagement>
-            <repository>
-                    <id>nexus-releases</id>
-                    <name>nexus-releases</name>
-                    <url>http://maven.goldengekko.com:8001/nexus/content/repositories/releases</url>
-            </repository>
-    </distributionManagement>
     
 </project>

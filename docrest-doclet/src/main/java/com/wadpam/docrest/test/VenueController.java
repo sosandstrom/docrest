@@ -28,7 +28,7 @@ public class VenueController extends AbstractController<Venue> {
         
         return new ResponseEntity<Venue>(HttpStatus.NOT_FOUND);
     }
-
+	
     /**
      * Updates an existing Venue, passed in the POST contents.
      * @param request not used

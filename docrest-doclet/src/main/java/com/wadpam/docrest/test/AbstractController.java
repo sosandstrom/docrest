@@ -31,6 +31,19 @@ public class AbstractController<T> {
             @RequestParam(defaultValue="10") int limit) {
         return new ResponseEntity<List<T>>(HttpStatus.NOT_FOUND);
     }
+
+	 /**
+     * Lee's post test, Retrieves all entities of type T 
+     * @param offset skip this number of entities before returning. Used for paging. Default is 0.
+     * @param limit return this number of entities. Used for paging. Default is 10.
+     * @return 
+     */
+    @RestReturn(value=List.class)
+    @RequestMapping(value="", method= RequestMethod.POST)
+    public ResponseEntity<List<T>> findAllPost(@RequestParam(defaultValue="0") int offset,
+            @RequestParam(defaultValue="10") int limit) {
+        return new ResponseEntity<List<T>>(HttpStatus.NOT_FOUND);
+    }
     
     /**
      * Retrieves the first entity of type T 
