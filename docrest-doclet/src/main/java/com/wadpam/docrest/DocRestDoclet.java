@@ -10,6 +10,7 @@ import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.AnnotationTypeElementDoc;
 import com.sun.javadoc.AnnotationValue;
 import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.Doclet;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.Parameter;
@@ -51,8 +52,10 @@ public class DocRestDoclet {
     
     /** for JSON Object classes */
     private static final Map<String,Class> jsonClassMap = new TreeMap<String,Class>(); 
-    private static final Map<String,ClassDoc> jsonDocMap = new TreeMap<String,ClassDoc>(); 
+    private static final Map<String,ClassDoc> jsonDocMap = new TreeMap<String,ClassDoc>();
     
+    private String basePath;
+    private String baseUrl;
 
     public DocRestDoclet() throws Exception {
         final Properties p = new Properties();
@@ -103,6 +106,25 @@ public class DocRestDoclet {
         writer.close();
     }
 
+    protected void merge(String templateFilename, Resource res) throws FileNotFoundException, IOException {
+        final File javaFile = new File(res.getSimpleType() + ".json");
+
+        final PrintWriter writer = new PrintWriter(javaFile);
+        Template template;
+        try {
+            template = Velocity.getTemplate(templateFilename);
+            vc.put("resource", res);
+            template.merge(vc, writer);
+        } catch (ResourceNotFoundException ex) {
+            Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseErrorException ex) {
+            Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        writer.close();
+    }
+
     protected static String[] getValue(AnnotationDesc annotationDesc, String name) {
         String[] returnValue = new String[1];
         returnValue[0] = "";
@@ -131,12 +153,22 @@ public class DocRestDoclet {
         return returnValue;
     }
 
-    protected List<Resource> traverse(RootDoc root) {
+    protected Collection<Resource> traverse(RootDoc root) {
         this.rootDoc = root;
+        vc.put("basePath", getBasePath());
+        vc.put("baseUrl", getBaseUrl());
+        
+        
         for (ClassDoc classDoc : root.classes()) {
             classDocs.put(classDoc.qualifiedName(), classDoc);
         }
-        final List<Resource> resources = new ArrayList<Resource>();
+        final Collection<Resource> resources = new TreeSet<Resource>(new Comparator<Resource>() {
+            @Override
+            public int compare(Resource o1, Resource o2) {
+                return o1.getEntityType().compareToIgnoreCase(o2.getEntityType());
+//                return o1.getPaths()[0].compareToIgnoreCase(o2.getPaths()[0]);
+            }
+        });
 
         // pre-filter @Controllers
         AnnotationTypeDoc type;
@@ -155,7 +187,13 @@ public class DocRestDoclet {
                 else if (RestReturn.class.getName().equals(type.qualifiedName())) {
                     for (ElementValuePair element : classAnnotation.elementValues()) {
                         if ("value".equals(element.element().name())) {
-                            resource.setEntityType(element.value().value().toString());
+                            final String className = element.value().value().toString();
+                            resource.setEntityType(className);
+                            resource.setSimpleType(className);
+                            int beginIndex = className.lastIndexOf('.');
+                            if (-1 < beginIndex) {
+                                resource.setSimpleType(className.substring(beginIndex+1));
+                            }
                         }
                     }
                 }
@@ -167,19 +205,12 @@ public class DocRestDoclet {
 
                 // traverse ancestors
                 boolean include = traverseAncestors(classDoc, resource);
-                if (include) {
+                if (include && null != resource.getEntityType()) {
                     resources.add(resource);
                 }
             }
 
         }
-        Collections.sort(resources, new Comparator<Resource>() {
-
-            @Override
-            public int compare(Resource o1, Resource o2) {
-                return o1.getPaths()[0].compareToIgnoreCase(o2.getPaths()[0]);
-            }
-        });
 
         vc.put("helper", this);
         vc.put("resources", resources);
@@ -187,6 +218,25 @@ public class DocRestDoclet {
         vc.put("encoder", new StringEscapeUtils());
         vc.put("jsonMap", jsonClassMap);
         vc.put("jsonDoc", jsonDocMap);
+        
+        String path;
+        Collection<Method> methods;
+        for (Resource r : resources) {
+            for (String rp : r.getPaths()) {
+                for (Method m : r.getMethods()) {
+                    for (String mp : m.getPaths()) {
+                        path = String.format("%s/%s", rp, mp);
+                        methods = r.getOperationsMap().get(path);
+                        if (null == methods) {
+                            methods = new TreeSet<Method>();
+                            r.getOperationsMap().put(path, methods);
+                        }
+                        methods.add(m);
+                    }
+                }
+            }
+        }
+        
         return resources;
     }
 
@@ -206,6 +256,7 @@ public class DocRestDoclet {
         boolean include = false;
         // find mapped methods
         for (MethodDoc methodDoc : classDoc.methods()) {
+            boolean includeMethod = false;
             Method method = new Method(resource);
             for (AnnotationDesc methodAnnotation : methodDoc.annotations()) {
                 type = methodAnnotation.annotationType();
@@ -233,7 +284,7 @@ public class DocRestDoclet {
                 
                 if (RestReturn.class.getName().equals(type.qualifiedName())) {
                     include = true;
-                    resource.getMethods().add(method);
+                    includeMethod = true;
                     LOG.info("---- @RestReturn " + methodDoc.name() + "() of " + classDoc.simpleTypeName() + " ----");
                     method.setRestReturn(methodAnnotation);
                     for (ElementValuePair element : methodAnnotation.elementValues()) {
@@ -245,6 +296,9 @@ public class DocRestDoclet {
                         }
                     }
                 }
+            }
+            if (includeMethod) {
+                resource.getMethods().add(method);
             }
             
             if (null != method.getReturnType()) {
@@ -521,13 +575,52 @@ public class DocRestDoclet {
         DocRestDoclet.rootDoc = rootDoc;
     }
     
+    public static int optionLength(String option) {
+        if ("-basePath".equals(option)) {
+            return 2;
+        }
+        if ("-baseUrl".equals(option)) {
+            return 2;
+        }
+        return 0;
+    }
+
+    public String getBasePath() {
+        return basePath;
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+    
     public static boolean start(RootDoc root) {
         try {
             DocRestDoclet doclet = new DocRestDoclet();
+            for (String[] options : root.options()) {
+                if ("-basePath".equals(options[0])) {
+                    doclet.setBasePath(options[1]);
+                }
+                if ("-baseUrl".equals(options[0])) {
+                    doclet.setBaseUrl(options[1]);
+                }
+            }
             doclet.addAttribute("root", root);
-            doclet.traverse(root);
+            Collection<Resource> resources = doclet.traverse(root);
 
             doclet.merge("api_html.vm", null, "api.html");
+            doclet.merge("api_resources.vm", null, "resources.json");
+            
+            for (Resource r : resources) {
+                doclet.merge("api_resource.vm", r);
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

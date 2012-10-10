@@ -1,0 +1,25 @@
+{
+    "apiVersion": "0.2",
+    "swaggerVersion": "1.1",
+    "basePath": "${baseUrl}",
+    "apis": [
+#foreach( $entry in $resource.operationsMap.entrySet() )#if( $velocityCount > 1),#end
+
+        {
+            "path": "${entry.key}",
+            "description": "${resource.classDoc.commentText()}",
+            "operations": [
+
+#foreach( $method in $entry.value )#if( $velocityCount > 1),#end
+                {
+                    "httpMethod": "${method.method}",
+                    "nickname": "${method.name}"
+                }
+#end
+            ]
+        }
+#end
+    ],
+    "models":{
+    }
+}

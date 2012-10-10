@@ -1,0 +1,18 @@
+{
+    "apiVersion": "0.2",
+    "swaggerVersion": "1.1",
+    "basePath": "${basePath}",
+    "apis": [
+#set( $first = true )
+#foreach( $resource in $resources )
+#if( $resource.classDoc )
+#if(!$first),#end
+        {
+            "path": "/${resource.simpleType}.{format}",
+            "description": "${resource.entityType} ${resource.classDoc.commentText()}"
+        }
+#set( $first = false )
+#end
+#end
+    ]
+}

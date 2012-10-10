@@ -5,33 +5,29 @@
 package com.wadpam.docrest.domain;
 
 import com.sun.javadoc.ClassDoc;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
  *
  * @author os
  */
-public class Resource /*implements Comparable<Resource>*/ {
+public class Resource {
     private String paths[];
     
     private String entityType;
     
+    private String simpleType;
+    
     private ClassDoc classDoc;
     
-    private final Set<Method> methods = new TreeSet<Method>(new Comparator<Method>() {
-
-        @Override
-        public int compare(Method o1, Method o2) {
-            try {
-                return o1.getName().compareToIgnoreCase(o2.getName());
-            }
-            catch (NullPointerException why) {
-                return 1;
-            }
-        }
-    });
+    private Map<String, Collection<Method>> operationsMap = new TreeMap<String, Collection<Method>>();
+    
+    private final Set<Method> methods = new TreeSet<Method>();
 
     public ClassDoc getClassDoc() {
         return classDoc;
@@ -60,5 +56,21 @@ public class Resource /*implements Comparable<Resource>*/ {
     public void setEntityType(String entityType) {
         this.entityType = entityType;
     }
-    
+
+    public String getSimpleType() {
+        return simpleType;
+    }
+
+    public void setSimpleType(String simpleType) {
+        this.simpleType = simpleType;
+    }
+
+    public Map<String, Collection<Method>> getOperationsMap() {
+        return operationsMap;
+    }
+
+    public void setOperationsMap(Map<String, Collection<Method>> operationsMap) {
+        this.operationsMap = operationsMap;
+    }
+
 }

@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author os
  */
-public class Method {
+public class Method implements Comparable<Method> {
     
     private final Resource resource;
     
@@ -46,6 +46,11 @@ public class Method {
     
     public Method(Resource resource) {
         this.resource = resource;
+    }
+
+    @Override
+    public int compareTo(Method t) {
+        return name.compareToIgnoreCase(t.name);
     }
     
     public ClassDoc getClassDoc() {
