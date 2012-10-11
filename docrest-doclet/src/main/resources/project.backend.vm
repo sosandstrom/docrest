@@ -1,0 +1,67 @@
+
+
+
+#set($output = [])
+#set($outputSchema = [])
+
+
+#foreach( $resource in $resources )
+#foreach( $method in $resource.methods )
+#foreach( $rp in $resource.paths )
+#foreach( $mp in $method.paths )
+#set($included_pathvars = "")
+#set($included_vars = [])
+#set($pathcount = 0)
+#foreach( $param in $method.pathVariables )
+## #set($_dummy = $included_vars.add(${param.name}))
+#if($included_pathvars == "")
+#set($included_pathvars = ${param.name})
+#else
+#set($included_pathvars = $included_pathvars+","+${param.name})
+#end
+#end
+#foreach( $param in $method.parameters )
+#set($_dummy = $included_vars.add(${param.name}))
+#end
+## backendAPI.prototype.${method.name} = function($included_vars) {
+#if(${method.method} == "GET")
+//Get data
+function backendAPI_admin_${method.name}($included_pathvars){
+#set($name = "$method.entityType")
+#set( $name = $name.replace(".",","))
+#foreach($number in $name.split(","))
+#set($template_name = $number)
+#end
+#set($underscore = "_")
+	//getData
+#if($included_vars != [])
+	var data = {};
+#foreach( $vars in $included_vars )
+	data.$vars = $("#$vars").val();
+#end
+#if($included_pathvars != "")
+	data = projectAPI.${method.name}(data,$included_pathvars);
+#else
+	data = projectAPI.${method.name}(data);
+#end
+#else
+	var data = projectAPI.${method.name}($included_pathvars);
+#end
+	//add data to table
+	$("#${template_name}").tmpl(data).appendTo("#${method.name}-${template_name}-output");
+}
+
+#end
+#end
+#end
+#end
+#end
+
+//TODO: generate sortable tables for get functions
+//TODO: generate css file
+//TODO: generate forms for post and put
+//TODO: link all sections to menu system
+
+
+
+

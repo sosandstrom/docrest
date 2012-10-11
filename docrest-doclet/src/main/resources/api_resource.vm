@@ -18,7 +18,8 @@
 	             {
 	                 "httpMethod": "${method.method}",
 	                 "nickname": "${method.name}",
-							"notes": "${method.methodDoc.commentText()}",
+#set( $new_json = $method.json.replace('"',"&#34;"))
+							"notes": "${method.methodDoc.commentText()}<br /><h4>Response Example</h4><pre>${new_json}</pre>",
 							"summary":"${method.methodDoc.commentText()}()",
 							"parameters":[
 #set( $foo = "" )
@@ -64,8 +65,17 @@ $foo
 #end
 #end
 							],
-"responseTypeInternal":"${method.returnType}"
-
+#if(${method.entityType} != ${method.returnType})
+#set( $new_return = $method.returnType.replace("java.util.List<", "List[") )
+#set( $new_return = $new_return.replace(">", "]") )
+#if(${new_return} != ${method.returnType})
+"responseTypeInternal":"${new_return}"
+#else
+"responseTypeInternal":"${method.entityType}"
+#end
+#else
+"responseTypeInternal":"${method.entityType}"
+ #end
 	             }
 	         ]
 			}
@@ -78,7 +88,7 @@ $foo
     "models":{
 #foreach( $entry in $jsonDoc.entrySet() )
 #if( $velocityCount > 1),#end
-"${entry.key} -- ${entry.value}":{
+"${entry.value}":{
 	"properties":{
 #set( $jd = $entry.value )
 #set( $foo = "" )

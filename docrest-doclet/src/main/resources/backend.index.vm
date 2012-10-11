@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Generated Backend</title>
+		<meta name="viewport" content="width=device-width">
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+		<script src="backendAPI.js"></script>
+		<script src="project.backend.js"></script>
+		<link rel="stylesheet" href="" type="text/css" />
+	</head>
+	<body>
+
+#foreach( $entry in $jsonDoc.entrySet() )
+
+#set($template_name = "")
+#set($name = "$entry.value")
+#set( $name = $name.replace(".",","))
+#foreach($number in $name.split(","))
+#set($template_name = $number)
+#end
+
+<script id="${template_name}" type="text/x-jquery-tmpl">
+<tr>#set( $jd = $entry.value )
+#foreach( $m in $jd.methods(false) )
+#if( $helper.isGetter($m.name()) )
+#set( $memberName = $helper.getMemberName($m.name()) )
+#set( $memberType = $m.returnType().qualifiedTypeName() )
+#set( $output_cells = "")
+#foreach( $check in $jsonDoc.entrySet() )
+#if(${check.value} == ${memberType})
+#set( $check_jd = $check.value )
+#foreach( $check_m in $check_jd.methods(false) )
+#if( $helper.isGetter($check_m.name()) )
+#set( $check_memberName = $helper.getMemberName($check_m.name()) )
+#set( $check_memberType = $check_m.returnType().qualifiedTypeName() )
+#set( $output_cells = "$output_cells<td>${${check_memberName}}</td>")
+#end
+#end
+#end
+#end
+#if($output_cells == "")<td>${${memberName}}</td>#else$output_cells#end
+#end
+#end</tr>
+</script>
+#end
+
+
+
+
+
+<script>
+
+
+#set($tables = "")
+#set($forms = "")
+#set($quote = '"')
+
+#set($output = [])
+#set($outputSchema = [])
+
+
+#foreach( $resource in $resources )
+#foreach( $method in $resource.methods )
+#foreach( $rp in $resource.paths )
+#foreach( $mp in $method.paths )
+#set($included_vars = [])
+#set($pathcount = 0)
+#foreach( $param in $method.pathVariables )
+#set($_dummy = $included_vars.add(${param.name}))
+#end
+#foreach( $param in $method.parameters )
+#set($_dummy = $included_vars.add(${param.name}))
+#end
+## backendAPI.prototype.${method.name} = function($included_vars) {
+#if(${method.method} == "GET")
+//TODO: create a form to call each function, if it requires data build inputs.
+//call function from project.backend.js
+
+#set($forms = $forms+"<div class=${quote}input_form${quote}>")
+#set($forms = $forms+"<h2>${method.name}</h2>")
+#foreach($variable in $included_vars)
+#set($forms = $forms+"<label for=${quote}${variable}${quote}>${variable}</label><input type=${quote}text${quote} name=${quote}${variable}${quote} id=${quote}${variable}${quote} /><br />")
+
+#end
+#set($forms = $forms+"<button onclick=${quote}backendAPI_admin_${method.name}();${quote}>Submit</button>")
+
+#set($forms = $forms+"</div>")
+
+
+//backendAPI_admin_${method.name}();
+
+#set($name = "$method.entityType")
+#set( $name = $name.replace(".",","))
+#foreach($number in $name.split(","))
+#set($template_name = $number)
+#end
+#set($tables = $tables+"<table id=${quote}${method.name}-${template_name}-output${quote}></table>
+")
+#end
+#end
+#end
+#end
+#end
+
+//TODO: generate sortable tables for get functions
+//TODO: generate css file
+//TODO: generate forms for post and put
+//TODO: link all sections to menu system
+
+
+
+</script>
+
+		<section>
+			<header></header>
+			<article>
+$forms
+<br />
+$tables
+			</article>
+			<footer></footer>
+		</section>
+	</body>
+</html>

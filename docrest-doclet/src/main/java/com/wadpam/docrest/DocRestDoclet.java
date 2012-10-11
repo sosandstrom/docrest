@@ -617,6 +617,10 @@ public class DocRestDoclet {
 
             doclet.merge("api_html.vm", null, "api.html");
             doclet.merge("api_resources.vm", null, "resources.json");
+
+				doclet.merge("backendAPI.vm", null, "backendAPI.js");
+				doclet.merge("project.backend.vm", null, "project.backend.js");
+				doclet.merge("backend.index.vm", null, "index.html");
             
             for (Resource r : resources) {
                 doclet.merge("api_resource.vm", r);
