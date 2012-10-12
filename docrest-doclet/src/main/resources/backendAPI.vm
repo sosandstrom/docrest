@@ -108,14 +108,12 @@ backendAPI.prototype.${method.name} = function($included_vars) {
 	var data = {};
 #end
 #set($quote = '"')
-#set($url = "/${rp}/${mp}")
+#set( $escBegin = "{" )
+#set( $escEnd = "}" )
+#set($url = $rp.replace("${escBegin}domain${escEnd}/","") + "/${mp}")
 #foreach( $param in $method.pathVariables )
 
-## #if( $velocityCount > 1)
-## #set( $url = $url.replace("{${param.name}}", "&${param.name}=${quote}+${param.name}+${quote}") )
-## #else
-## #set( $url = $url.replace("{${param.name}}", "?${param.name}=${quote}+${param.name}+${quote}") )
-## #end
+
 #set( $url = $url.replace("{${param.name}}", "${quote}+${param.name}+${quote}") )
 
 #end
