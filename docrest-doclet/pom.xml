@@ -3,7 +3,7 @@
     <groupId>com.wadpam</groupId>
     <artifactId>docrest-doclet</artifactId>
     <packaging>jar</packaging>
-    <version>1.19</version>
+    <version>1.19-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     
     <properties>
