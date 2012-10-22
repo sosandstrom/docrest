@@ -39,6 +39,12 @@
             <email>s.o.sandstrom@gmail.com</email>
             <url>http://www.linkedin.com/in/sosandstrom</url>
         </developer>
+			<developer>
+				<id>LeePritchard</id>
+				<name>Lee Pritchard</name>
+				<email>leepritchard@live.com</email>
+				<url>http://www.linkedin.com/in/LeePritchard1983</url>
+			</developer>
     </developers>
 
     <scm>
