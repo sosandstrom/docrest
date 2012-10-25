@@ -78,15 +78,20 @@
 //TODO: create a form to call each function, if it requires data build inputs.
 //call function from project.backend.js
 
-#set($forms = $forms+"<div class=${quote}input_form${quote}>")
-#set($forms = $forms+"<h2>${method.name}</h2>")
+#set($forms = $forms+"<div class=${quote}input_form${quote}>
+")
+#set($forms = $forms+"	<h2>${method.name}</h2>
+")
 #foreach($variable in $included_vars)
-#set($forms = $forms+"<label for=${quote}${variable}${quote}>${variable}</label><input type=${quote}text${quote} name=${quote}${variable}${quote} id=${quote}${variable}${quote} /><br />")
+#set($forms = $forms+"	<label for=${quote}${variable}${quote}>${variable}</label><input type=${quote}text${quote} name=${quote}${variable}${quote} id=${quote}${variable}${quote} /><br />
+")
 
 #end
-#set($forms = $forms+"<button onclick=${quote}backendAPI_admin_${method.name}();${quote}>Submit</button>")
+#set($forms = $forms+"	<button onclick=${quote}backendAPI_admin_${method.name}();${quote}>Submit</button>
+")
 
-#set($forms = $forms+"</div>")
+#set($forms = $forms+"</div>
+")
 
 
 //backendAPI_admin_${method.name}();
@@ -114,7 +119,7 @@
 </script>
 
 		<section>
-			<header></header>
+			<header><h1>Generated CMS</h1></header>
 			<article>
 $forms
 <br />

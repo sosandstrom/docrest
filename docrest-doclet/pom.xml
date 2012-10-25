@@ -18,14 +18,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
@@ -39,7 +31,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.8</version>
                 <configuration>
-                    <additionalparam>-basePath http://127.0.0.1/restAPItests -baseUrl http://localhost:8080/api/testenv</additionalparam>
+<outputDirectory>${basedir}/target/swagger</outputDirectory>
+                    <additionalparam>-basePath http://127.0.0.1/generated_cms/ -baseUrl http://localhost:8929 -clientId localhost.generic-app</additionalparam>
                     <author>false</author>
                     <doclet>com.wadpam.docrest.DocRestDoclet</doclet>
                     <docletArtifact>

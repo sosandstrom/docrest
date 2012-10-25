@@ -54,8 +54,13 @@ public class DocRestDoclet {
     private static final Map<String,Class> jsonClassMap = new TreeMap<String,Class>(); 
     private static final Map<String,ClassDoc> jsonDocMap = new TreeMap<String,ClassDoc>();
     
+
+/*
+https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.generic-app&redirect_uri=/ugly/%23providerId=gekko&response_type=token
+*/
     private String basePath;
     private String baseUrl;
+    private String clientId;
 
     public DocRestDoclet() throws Exception {
         final Properties p = new Properties();
@@ -157,7 +162,7 @@ public class DocRestDoclet {
         this.rootDoc = root;
         vc.put("basePath", getBasePath());
         vc.put("baseUrl", getBaseUrl());
-        
+        vc.put("clientId", getClientId());
         
         for (ClassDoc classDoc : root.classes()) {
             classDocs.put(classDoc.qualifiedName(), classDoc);
@@ -582,7 +587,21 @@ public class DocRestDoclet {
         if ("-baseUrl".equals(option)) {
             return 2;
         }
+        if ("-clientId".equals(option)) {
+            return 2;
+        }
         return 0;
+    }
+
+
+
+	
+	 public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getBasePath() {
@@ -611,6 +630,9 @@ public class DocRestDoclet {
                 if ("-baseUrl".equals(options[0])) {
                     doclet.setBaseUrl(options[1]);
                 }
+                if ("-clientId".equals(options[0])) {
+                    doclet.setClientId(options[1]);
+                }
             }
             doclet.addAttribute("root", root);
             Collection<Resource> resources = doclet.traverse(root);
@@ -622,8 +644,13 @@ public class DocRestDoclet {
 				doclet.merge("project.backend.vm", null, "project.backend.js");
 				doclet.merge("backend.index.vm", null, "index.html");
             
+				int count = 0;
+
             for (Resource r : resources) {
+Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, "yo");
+					r.setCount(count);
                 doclet.merge("api_resource.vm", r);
+						count++;
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, ex);

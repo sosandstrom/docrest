@@ -1,8 +1,55 @@
-{
+##################################################################
+##	Create macro to get {*} attributes from array and 
+## return , seperated string
+##################################################################
+#macro( getGlobal $url $seperator)
+#if($url.indexOf("{") != "-1")
+#set($global = $url.substring($url.indexOf("{"),$url.indexOf("}")))
+#set($global = $global.substring(1,$global.length()))
+#if($global != "") $seperator$global #set($url = $url.replace("{${global}}","")) #getGlobal(${url} ",")
+#end
+#end
+#end{
     "apiVersion": "0.2",
     "swaggerVersion": "1.1",
     "basePath": "${baseUrl}",
+##################################################################
+##	Get all the variables from the path and create a unique array
+##################################################################
+#set($allGlobals = [])
+#foreach( $rp in $resource.paths )
+#set($globals = "#getGlobal(${rp} '')")
+#set($globals = $globals.replace(" ",""))
+#set ($globalsList = $globals.split(",") )
+#foreach( $global in $globalsList )
+#if($global != "")
+#set($alreadyDone = false)
+#foreach($done in $allGlobals)
+#if($done == $global)
+#set($alreadyDone = true)
+#end
+#end
+#if($alreadyDone == false)
+#set($dummy = $allGlobals.add(${global}))
+#end
+#end
+#end
+#end
+##################################################################
+## Create globals attribute in json feed
+##################################################################
+#set($areGlobals = false)
+#foreach( $global in $allGlobals )
+#set($areGlobals = true)
+#if($velocityCount == 1)
+    "globals":[
+        #else        ,#end{"name":"${global}","type":"text","unique_name":"${global}_$resource.count"}
+#end
+#if($areGlobals ==true)
+    ],
+#end
     "apis": [
+#set($unique_identify = 0)
 #foreach( $resource in $resources )
 #if( $velocityCount > 1),#end
 #foreach( $method in $resource.methods )
@@ -10,6 +57,7 @@
 #foreach( $rp in $resource.paths )
 #if( $velocityCount > 1),#end
 #foreach( $mp in $method.paths )
+#set($unique_identify = $unique_identify+1)
 #if( $velocityCount > 1),#end
 			{
 	         "path": "/${rp}/${mp}",
@@ -17,7 +65,7 @@
 	         "operations": [
 	             {
 	                 "httpMethod": "${method.method}",
-	                 "nickname": "${method.name}",
+	                 "nickname": "${method.name}$unique_identify",
 #set( $new_json = $method.json.replace('"',"&#34;"))
 							"notes": "${method.methodDoc.commentText()}<br /><h4>Response Example</h4><pre>${new_json}</pre>",
 							"summary":"${method.methodDoc.commentText()}()",
@@ -28,7 +76,7 @@
 {
 		"name":"${param.name}"
 		,"description":"${param.comment}"
-		,"required":true,"dataType":"${param.type}"
+		,"required":false,"dataType":"${param.type}"
 		,"allowMultiple":false,"paramType":"path"
 }
 #set( $foo = "," )
@@ -41,7 +89,7 @@ $foo
 {
 		"name":"${param.name}"
 		,"description":"${param.comment}"
-		,"required":true,"dataType":"${param.type}"
+		,"required":false,"dataType":"${param.type}"
 		,"allowMultiple":false,"paramType":"query"
 }
 #end

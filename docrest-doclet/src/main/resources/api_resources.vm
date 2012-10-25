@@ -2,6 +2,8 @@
     "apiVersion": "0.2",
     "swaggerVersion": "1.1",
     "basePath": "${basePath}",
+    "baseUrl": "${baseUrl}",
+    "clientId": "${clientId}",
     "apis": [
 #set( $first = true )
 #foreach( $resource in $resources )

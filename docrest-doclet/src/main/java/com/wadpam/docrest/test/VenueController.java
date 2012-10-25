@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @RestReturn(value=Venue.class)
 @Controller
-@RequestMapping(value={"venue","v10/altvenue"})
+@RequestMapping(value={"{domain}/venue","{domain}/v10/altvenue"})
 public class VenueController extends AbstractController<Venue> {
     
     @RequestMapping(value={"{name}","findByName/{name}"}, method= RequestMethod.GET)

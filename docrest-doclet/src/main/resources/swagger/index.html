@@ -1,0 +1,205 @@
+<html>
+<head>
+    <title>Swagger UI</title>
+<!--    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>-->
+    <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+    <script src='lib/jquery.min.js' type='text/javascript'></script>
+    <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
+    <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
+    <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
+    <script src='lib/handlebars.runtime-1.0.0.beta.6.js' type='text/javascript'></script>
+    <script src='lib/underscore-min.js' type='text/javascript'></script>
+    <script src='lib/backbone-min.js' type='text/javascript'></script>
+    <script src='lib/swagger.js' type='text/javascript'></script>
+    <script src='swagger-ui.js' type='text/javascript'></script>
+
+    <style type="text/css">
+        .swagger-ui-wrap {
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .icon-btn {
+            cursor: pointer;
+        }
+
+        #message-bar {
+            min-height: 30px;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .message-success {
+            color: #89BF04;
+        }
+
+        .message-fail {
+            color: #cc0000;
+        }
+
+body #header form#api_selector .input a#login {
+          display: block;
+          text-decoration: none;
+          font-weight: bold;
+          padding: 6px 8px;
+          font-size: 0.9em;
+          color: white;
+          background-color: #547f00;
+          -moz-border-radius: 4px;
+          -webkit-border-radius: 4px;
+          -o-border-radius: 4px;
+          -ms-border-radius: 4px;
+          -khtml-border-radius: 4px;
+          border-radius: 4px; }
+          body #header form#api_selector .input a#login:hover {
+            background-color: #547f00; }
+
+
+    </style>
+
+    <script type="text/javascript">
+/*********************************************
+**	Lees Edit to swagger
+*********************************************/
+function gup( name )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null ){
+	var match = RegExp('[&#]' + name + '=([^&]*)').exec(window.location.hash);
+	var hash_search = match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+	if(hash_search == null ){
+		return "";
+	}else{
+		return hash_search;
+	}
+   
+  }else{
+    return results[1];
+  }
+}
+
+function getApiUrl() {
+    return $("body").data('apiUrl');
+}
+function getOauthUrl() {
+    return $("body").data('oauthUrl');
+}
+function getSigninUrl() {
+    return $("body").data('signinUrl');
+}
+function getAccessToken() {
+    return $("body").data('access_token');
+}
+
+function updateEndpoints(baseUrl) {
+    $.ajax(baseUrl + "endpoints", {
+        async: false,
+        dataType: 'json' 
+    })
+    .success(function(data) {
+        $("body").data('apiUrl', data.apiUrl);
+        $("body").data('oauthUrl', data.oauthUrl);
+        $("body").data('signinUrl', data.signinUrl);
+    });
+}
+
+function registerFederated(accessToken, providerId, expiresIn) {
+
+    $.getJSON(getOauthUrl() + "user/me",
+        {
+            async: false,
+            access_token: getAccessToken()
+        },
+        function(user) {
+            $("body").data('providerUserId', user.id);
+            $.getJSON(getApiUrl() + "federated",
+                {
+                    access_token: accessToken,
+                    providerId: providerId,
+                    providerUserId: user.id,
+                    expires_in: expiresIn
+                })
+                .success(function(data) {
+                    $("#loginLogoutLink").attr('href', '?logout=true');
+                    $("#loginLogoutLink").text('Logout'); 
+                });
+        });
+}
+
+
+
+/*********************************************
+**	End of Lees Edit to swagger
+*********************************************/
+
+
+        $(function () {
+/*********************************************
+**	Lees Edit to swagger
+*********************************************/
+				var new_apikey = "access-token";
+				if(gup("apiKey")!=""){
+					new_apikey = gup("apiKey");
+				}else if(gup("access_token")!=""){
+					new_apikey = gup("access_token");
+				}
+				if(new_apikey != "access-token"){
+					updateEndpoints("http://localhost:8929/api/");
+					registerFederated(new_apikey, gup("providerId"), gup("expires_in"));
+				}
+//	#providerId=gekko
+//	&access_token=9d272c80-d8f6-45c5-b002-1e558b451627
+//	&token_type=bearer&expires_in=40009
+
+
+            window.swaggerUi = new SwaggerUi({
+                discoveryUrl:"../apidocs/resources.json",
+                apiKey:new_apikey,
+                dom_id:"swagger-ui-container",
+                supportHeaderParams: false,
+                supportedSubmitMethods: ['get', 'post', 'put', 'delete']
+            });
+/*********************************************
+**	End of Lees Edit to swagger
+*********************************************/
+            window.swaggerUi.load();
+        });
+
+    </script>
+</head>
+
+<body>
+<div id='header'>
+    <div class="swagger-ui-wrap">
+        <a id="logo" href="http://swagger.wordnik.com">swagger</a>
+
+        <form id='api_selector'>
+           <!-- <div class='input icon-btn'>
+                <img id="show-pet-store-icon" src="images/pet_store_api.png" title="Show Swagger Petstore Example Apis">
+            </div> -->
+            <!-- <div class='input icon-btn'>
+                <img id="show-wordnik-dev-icon" src="images/wordnik_api.png" title="Show Wordnik Developer Apis">
+            </div> -->
+            <!-- <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl"
+                                      type="text"/></div> -->
+            <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+            <div class='input'><a id="login" href="#">Login</a></div>
+        </form>
+    </div>
+</div>
+
+<div id="message-bar" class="swagger-ui-wrap">
+    &nbsp;
+</div>
+
+<div id="swagger-ui-container" class="swagger-ui-wrap">
+
+</div>
+
+</body>
+
+</html>

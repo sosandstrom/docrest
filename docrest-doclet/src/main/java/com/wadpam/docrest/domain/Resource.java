@@ -29,6 +29,8 @@ public class Resource {
     
     private final Set<Method> methods = new TreeSet<Method>();
 
+    private int count;
+
     public ClassDoc getClassDoc() {
         return classDoc;
     }
@@ -41,7 +43,15 @@ public class Resource {
         return methods;
     }
 
-    public String[] getPaths() {
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+	 public String[] getPaths() {
         return paths;
     }
 
