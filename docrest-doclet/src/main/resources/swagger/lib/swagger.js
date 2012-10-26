@@ -72,7 +72,7 @@ log('fetching resource list: ' + this.discoveryUrl);
 //TODO: create login button
 
 log('fetching resource list: ' + response.baseUrl);
-
+ $("body").data('baseUrl', response.baseUrl);
 
 /*********************************************
 **	End of Lees Edit to swagger

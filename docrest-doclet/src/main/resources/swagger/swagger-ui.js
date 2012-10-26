@@ -1048,8 +1048,13 @@ buffer += "<tr><td class='code required'>"+stack1[x].name+"</td><td><input id='"
 **	Lees Edit to swagger
 *********************************************/
 	 HeaderView.prototype.login = function() {
-		updateEndpoints($("#baseUrl").val());
-		window.location = $("body").data("oauthUrl")+"authorize?client_id=localhost.generic-app&redirect_uri=http://localhost:8929/swagger/%23providerId=gekko&response_type=token";
+		if($("#login").attr('alt') == "login"){
+			updateEndpoints($("#baseUrl").val());
+			window.location = $("body").data("oauthUrl")+"authorize?client_id=localhost.generic-app&redirect_uri=http://localhost:8929/swagger/%23providerId=gekko&response_type=token";
+
+		}else{
+			window.location = "?logout=true";
+		}
     };
 /*********************************************
 **	End of Lees Edit to swagger

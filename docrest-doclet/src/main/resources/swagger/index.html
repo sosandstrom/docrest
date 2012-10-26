@@ -138,24 +138,41 @@ function registerFederated(accessToken, providerId, expiresIn) {
 
 
         $(function () {
-/*********************************************
-**	Lees Edit to swagger
-*********************************************/
+
+
+
+/*
+	var new_apikey = "access-token";
+	if(gup("apiKey")!=""){
+		new_apikey = gup("apiKey");
+	}else if(gup("access_token")!=""){
+		new_apikey = gup("access_token");
+	}
+	if(new_apikey != "access-token"){
+		updateEndpoints("http://localhost:8929/api/");
+		registerFederated(new_apikey, gup("providerId"), gup("expires_in"));
+	}
+
+   window.swaggerUi = new SwaggerUi({
+       discoveryUrl:"../../../../../../apidocs/resources.json",
+       apiKey:new_apikey,
+       dom_id:"swagger-ui-container",
+       supportHeaderParams: false,
+       supportedSubmitMethods: ['get', 'post', 'put', 'delete']
+   });
+
+   window.swaggerUi.load();
+
+*/
 				var new_apikey = "access-token";
 				if(gup("apiKey")!=""){
 					new_apikey = gup("apiKey");
 				}else if(gup("access_token")!=""){
 					new_apikey = gup("access_token");
 				}
-				if(new_apikey != "access-token"){
-					updateEndpoints("http://localhost:8929/api/");
-					registerFederated(new_apikey, gup("providerId"), gup("expires_in"));
-				}
-//	#providerId=gekko
-//	&access_token=9d272c80-d8f6-45c5-b002-1e558b451627
-//	&token_type=bearer&expires_in=40009
-
-
+/*********************************************
+**	Lees Edit to swagger
+*********************************************/
             window.swaggerUi = new SwaggerUi({
                 discoveryUrl:"../apidocs/resources.json",
                 apiKey:new_apikey,
@@ -167,6 +184,19 @@ function registerFederated(accessToken, providerId, expiresIn) {
 **	End of Lees Edit to swagger
 *********************************************/
             window.swaggerUi.load();
+
+
+				if(new_apikey != "access-token"){
+				setTimeout(function() {
+					updateEndpoints($("body").data('baseUrl'));
+					registerFederated(new_apikey, gup("providerId"), gup("expires_in"));
+					$("#login").html("Logout");
+					$("#login").attr("alt","logout");
+},250);
+				}
+
+				
+
         });
 
     </script>
@@ -187,7 +217,7 @@ function registerFederated(accessToken, providerId, expiresIn) {
             <!-- <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl"
                                       type="text"/></div> -->
             <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
-            <div class='input'><a id="login" href="#">Login</a></div>
+            <div class='input'><a id="login" alt="login" href="#">Login</a></div>
         </form>
     </div>
 </div>
