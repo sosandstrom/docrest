@@ -146,7 +146,12 @@
 			</table>
 
 			<p>
-                            <b>Response Type</b>: ${helper.renderType($encoder.escapeHtml($method.returnType))}
+                            <b>Response Type</b>: 
+#if( "java.lang.Object" == $method.returnType )
+                            ${helper.renderType($encoder.escapeHtml($method.entityType))}
+#else
+                            ${helper.renderType($encoder.escapeHtml($method.returnType))}
+#end
                         </p>
 
 		<h3>Response Example</h3>

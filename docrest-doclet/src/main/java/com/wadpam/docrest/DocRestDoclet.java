@@ -185,7 +185,7 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
 
                 if ("org.springframework.stereotype.Controller".equals(type.qualifiedName())) {
                     resource.setClassDoc(classDoc);
-                    LOG.info("========= @Controller " + classDoc.qualifiedName() + " ========");
+                    System.out.println("========= @Controller " + classDoc.qualifiedName() + " ========");
                 } else if ("org.springframework.web.bind.annotation.RequestMapping".equals(type.qualifiedName())) {
                     paths = getValue(classAnnotation, "value");
                 }
@@ -201,9 +201,10 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                             }
                         }
                     }
+                    System.out.println("========= @RestReturn " + classDoc.qualifiedName() + " ========");
+                    System.out.println(String.format("             entity = %s", resource.getEntityType()));
                 }
             }
-            LOG.info("  -> Entity is " + resource.getEntityType());
 
             if (null != resource.getClassDoc()) {
                 resource.setPaths(paths);
@@ -546,6 +547,7 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
             LOG.info("        parameter " + p.typeName() + " " + p.name());
             for (AnnotationDesc paramAnnotation : p.annotations()) {
                 type = paramAnnotation.annotationType();
+                LOG.info("                    @" + type.name());
                 if ("org.springframework.web.bind.annotation.PathVariable".equals(type.qualifiedName())) {
                     Param param = new Param();
                     param.setName(p.name());
