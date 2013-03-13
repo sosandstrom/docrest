@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.wadpam</groupId>
         <artifactId>docrest</artifactId>
-        <version>1.22-SNAPSHOT</version>
+        <version>1.22</version>
     </parent>
     <artifactId>docrest-doclet</artifactId>
     <packaging>jar</packaging>
