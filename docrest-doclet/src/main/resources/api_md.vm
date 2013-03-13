@@ -1,0 +1,125 @@
+<!-- Table of Contents ---------------------------------------------------->
+Contents
+========
+#foreach( $resource in $resources )
+1. ${resource.classDoc.qualifiedName()}
+#foreach( $method in $resource.methods )
+  * [${method.name}()](#${helper.renderAnchor($method.name)})
+#end
+#end
+
+#foreach( $resource in $resources )
+<!-- Resource: /person ---------------------------------------------------->
+#foreach( $rp in $resource.paths )
+#if( $velocityCount > 1), #end/${rp}
+============
+#end
+
+**Description**: ${resource.classDoc.commentText()}
+
+**Concrete class**: ${resource.classDoc.qualifiedName()}
+
+#foreach( $method in $resource.methods )
+<!-- Method: findByName() ---------------------------------------------------->		
+
+${method.name}()
+----------------
+
+**Description**: ${method.methodDoc.commentText()}
+
+**Implementing Class**: ${method.classDoc.qualifiedName()}
+
+**REST path**: ${method.method} #foreach( $rp in $resource.paths )
+#if( $velocityCount > 1), #end
+#foreach( $mp in $method.paths )
+#if( $velocityCount > 1), #end
+    /${rp}/${mp}
+#end
+#end
+
+**Request parameters**:
+
+| Where | Name | Type | Description |
+|-------|------|------|-------------|
+#set( $hasNoRows = true )
+#foreach( $param in $method.pathVariables )
+#set( $hasNoRows = false )
+| path | ${param.name} | [${param.type}](#${helper.renderAnchor($param.type)}) | ${param.comment} |
+#end
+#foreach( $param in $method.parameters )
+#set( $hasNoRows = false )
+| query | ${param.name} | [${param.type}](#${helper.renderAnchor($param.type)}) | ${param.comment} |
+#end
+#if( $method.body )
+#set( $hasNoRows = false )
+| body | ${method.body.name} | [${method.body.type}](#${helper.renderAnchor($method.body.type)}) | ${method.body.comment} |
+#end
+#foreach( $param in $method.modelAttributes )
+#set( $hasNoRows = false )
+| body (properties separately) | ${param.name} | [${param.type}](#${helper.renderAnchor($param.type)}) | ${param.comment} |
+#end
+#if( $hasNoRows )
+| - | - | - | - |
+#end
+
+
+**Response Codes**:
+
+| HTTP Response Code | Message | Description |
+|--------------------|---------|-------------|
+#set( $hasNoRows = true )
+#foreach( $element in $method.restReturn.elementValues() )
+#if( $element.element().name() == "code" )
+#set( $codes = $element.value().value() )
+#foreach( $code in $codes )
+#set( $responseMessage = "" )
+#foreach( $e in $code.value().elementValues() )
+#if( $e.element().name() == "code" )#set( $responseCode = $e.value().value() )#end
+#if( $e.element().name() == "description" )#set( $responseDescription = $e.value().value() )#end
+#if( $e.element().name() == "message" )#set( $responseMessage = $e.value().value() )#end
+#end
+#set( $hasNoRows = false )
+| ${responseCode} | ${responseMessage} | ${responseDescription} |
+#end
+#end
+#end
+#if( $hasNoRows )
+| - | - | - |
+#end
+
+**Response Type**: #if( "java.lang.Object" == $method.returnType )
+[${method.entityType}](#${helper.renderAnchor($method.entityType)})
+#else
+[${method.returnType}](#${helper.renderAnchor($method.returnType)})
+#end
+
+**Response Example**:
+${method.json}
+				
+#end
+#end
+
+JSON Objects
+============
+
+#foreach( $entry in $jsonDoc.entrySet() )
+<!-- JSON object: ${entry.key} ---------------------------------------------------->		
+${entry.key}
+------------
+
+| Name | Type | Description |
+|------|------|-------------|
+#set( $jd = $entry.value )
+#foreach( $m in $jd.methods(false) )
+#if( $helper.isGetter($m.name()) )
+#set( $memberName = $helper.getMemberName($m.name()) )
+#set( $memberType = $m.returnType().qualifiedTypeName() )
+| ${memberName} | [${memberType}](#${helper.renderAnchor($memberType)}) | #foreach( $f in $jd.fields(false) )
+#if( $f.name() == $memberName )
+${f.commentText()}
+#end
+#end |
+#end
+#end
+#end
+

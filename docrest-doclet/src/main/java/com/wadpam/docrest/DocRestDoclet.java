@@ -506,6 +506,13 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
         }
         return returnValue;
     }
+    
+    public String renderAnchor(String canonicalName) {
+        if (null == canonicalName) {
+            return "";
+        }
+        return canonicalName.replaceAll("[\\.\\/\\{\\}\\(\\)]", "").toLowerCase();
+    }
 
     protected static Iterable<MethodDoc> getInheritedMethods(ClassDoc classDoc) {
         final Set<MethodDoc> methods = new TreeSet<MethodDoc>(new Comparator<MethodDoc>() {
@@ -640,19 +647,20 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
             Collection<Resource> resources = doclet.traverse(root);
 
             doclet.merge("api_html.vm", null, "api.html");
+            doclet.merge("api_md.vm", null, "api.md");
             doclet.merge("api_resources.vm", null, "resources.json");
 
-				doclet.merge("backendAPI.vm", null, "backendAPI.js");
-				doclet.merge("project.backend.vm", null, "project.backend.js");
-				doclet.merge("backend.index.vm", null, "index.html");
-            
-				int count = 0;
+            doclet.merge("backendAPI.vm", null, "backendAPI.js");
+            doclet.merge("project.backend.vm", null, "project.backend.js");
+            doclet.merge("backend.index.vm", null, "index.html");
+
+            int count = 0;
 
             for (Resource r : resources) {
-Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, "yo");
-					r.setCount(count);
+                Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, "yo");
+                r.setCount(count);
                 doclet.merge("api_resource.vm", r);
-						count++;
+                count++;
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DocRestDoclet.class.getName()).log(Level.SEVERE, null, ex);
