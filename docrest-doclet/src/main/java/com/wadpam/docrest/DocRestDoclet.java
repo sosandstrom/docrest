@@ -138,8 +138,8 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
         for (ElementValuePair evp : annotationDesc.elementValues()) {
             element = evp.element();
             value = evp.value();
-            Object[] values = (Object[]) value.value();
             if (name.equals(element.name())) {
+                Object[] values = (Object[]) value.value();
                 returnValue = new String[values.length];
                 int i = 0;
                 for (Object v : values) {
@@ -158,6 +158,19 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
         return returnValue;
     }
 
+    protected static Object getValueAsObject(AnnotationDesc annotationDesc, String name) {
+        AnnotationTypeElementDoc element;
+        AnnotationValue value;
+        for (ElementValuePair evp : annotationDesc.elementValues()) {
+            element = evp.element();
+            value = evp.value();
+            if (name.equals(element.name())) {
+                return value.value();
+            }
+        }
+        return null;
+    }
+    
     protected Collection<Resource> traverse(RootDoc root) {
         this.rootDoc = root;
         vc.put("basePath", getBasePath());
@@ -289,6 +302,9 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                 }
                 
                 if (RestReturn.class.getName().equals(type.qualifiedName())) {
+                    method.setSupportsClassParams(Boolean.TRUE.equals(getValueAsObject(methodAnnotation, "supportsClassParams")));
+                    LOG.info("       supportsClassParams=" + method.isSupportsClassParams());
+                    
                     include = true;
                     includeMethod = true;
                     LOG.info("---- @RestReturn " + methodDoc.name() + "() of " + classDoc.simpleTypeName() + " ----");
@@ -554,32 +570,23 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
             LOG.info("        parameter " + p.typeName() + " " + p.name());
             for (AnnotationDesc paramAnnotation : p.annotations()) {
                 type = paramAnnotation.annotationType();
-                LOG.info("                    @" + type.name());
+                Param param = new Param();
+                param.setName(p.name());
+                param.setComment(getComment(methodDoc, p.name()));
                 if ("org.springframework.web.bind.annotation.PathVariable".equals(type.qualifiedName())) {
-                    Param param = new Param();
-                    param.setName(p.name());
                     param.setType(p.typeName());
-                    param.setComment(getComment(methodDoc, p.name()));
                     method.getPathVariables().add(param);
                 } else if ("org.springframework.web.bind.annotation.RequestBody".equals(type.qualifiedName())) {
-                    Param param = new Param();
-                    param.setName(p.name());
                     param.setType(p.typeName());
-                    param.setComment(getComment(methodDoc, p.name()));
                     method.setBody(param);
                 } else if ("org.springframework.web.bind.annotation.RequestParam".equals(type.qualifiedName())) {
-                    Param param = new Param();
-                    param.setName(p.name());
                     param.setType(p.typeName());
-                    param.setComment(getComment(methodDoc, p.name()));
                     method.getParameters().add(param);
                 } else if ("org.springframework.web.bind.annotation.ModelAttribute".equals(type.qualifiedName())) {
-                    Param param = new Param();
-                    param.setName(renderType(p.type().qualifiedTypeName()));
                     param.setType(getJson(p.type().qualifiedTypeName(), null));
-                    param.setComment(getComment(methodDoc, p.name()));
                     method.getModelAttributes().add(param);
                 }
+                LOG.info("                    @" + type.name() + " " + param.getType() + " " + param.getName() + " /** " + param.getComment() + " */");
             }
         }
 

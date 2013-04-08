@@ -28,9 +28,9 @@
             </li>
         </ul>
 #foreach( $resource in $resources )
-<!-- Resource: /person ---------------------------------------------------->
     <h1 class="resourceHeader">
 #foreach( $rp in $resource.paths )
+<!-- Resource: /${rp} ---------------------------------------------------->
 #if( $velocityCount > 1),&nbsp;#end/${rp}
 #end
     </h1>
@@ -46,7 +46,7 @@
     </p>
 
 #foreach( $method in $resource.methods )
-<!-- Method: findByName() ---------------------------------------------------->		
+<!-- Method: ${method.name} ---------------------------------------------------->		
         <a name="${resource.classDoc.qualifiedName()}.${method.name}" />
 
         <h2 class="methodHeader">${method.name}()</h2>
@@ -58,6 +58,11 @@
         <p>
             <b>Implementing Class</b>: ${method.classDoc.qualifiedName()}
         </p>
+#foreach( $since in $method.methodDoc.tags("@since") )
+        <p>
+            <b>Since</b>:${since.text()}
+        </p>
+#end
 
         <p class="restPath">
             <b>REST path</b>: ${method.method}&nbsp;
@@ -68,6 +73,7 @@
     /${rp}/${mp}
 #end
 #end
+        </p>
 
 		<h3>Request parameters</h3>
 		<table>
@@ -90,6 +96,15 @@
                             <tr>
                                 <td>query</td><td>${param.name}</td><td>${param.type}</td><td>${param.comment}</td>
                             </tr>
+#end
+#if( $method.isSupportsClassParams() )
+#foreach( $tag in $resource.classDoc.tags("@param") )
+#set( $nameIndex = $tag.text().indexOf(" ") )
+#set( $typeIndex = $tag.text().lastIndexOf(" ") )
+                            <tr>
+                                <td>query (resource)</td><td>${tag.text().substring(0, $nameIndex)}</td><td>${tag.text().substring($typeIndex)}</td><td>${tag.text().substring($nameIndex, $typeIndex)}</td>
+                            </tr>
+#end
 #end
 #if( $method.body )
 #set( $hasNoRows = false )

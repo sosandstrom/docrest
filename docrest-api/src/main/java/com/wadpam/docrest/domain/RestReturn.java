@@ -33,4 +33,17 @@ public @interface RestReturn {
      * @return possible RestCodes
      */
     public RestCode[] code() default {};
+    
+    /**
+     * 
+     * @return true if the class-scope parameters are declared by this dummy method.
+     */
+    public boolean declaresClassParams() default false;
+    
+    /**
+     * set to true to include documentation for class-scope parameters.
+     * @return true if class-scope parameters should be documented
+     * @see RestReturn#classParams()
+     */
+    public boolean supportsClassParams() default false;
 }

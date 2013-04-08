@@ -44,6 +44,8 @@ public class Method implements Comparable<Method> {
     
     private Param body = null;
     
+    private boolean supportsClassParams = false;
+    
     public Method(Resource resource) {
         this.resource = resource;
     }
@@ -167,6 +169,14 @@ public class Method implements Comparable<Method> {
 
     public void setModelAttributes(List<Param> modelAttributes) {
         this.modelAttributes = modelAttributes;
+    }
+
+    public boolean isSupportsClassParams() {
+        return supportsClassParams;
+    }
+
+    public void setSupportsClassParams(boolean supportsClassParams) {
+        this.supportsClassParams = supportsClassParams;
     }
     
     

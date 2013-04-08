@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * This is the PersonController javadoc text, containing a few <b>HTML tags</b>.
+ * @param stores optional inner object. boolean
  * @author os
  */
 @RestReturn(value=Venue.class)
@@ -27,10 +29,12 @@ public class PersonController extends AbstractController {
      * findByName returns all Venues with the specified name
      * @param name the specified name
      * @return all Venues with the specified name
+     * @since 1.23
      */
     @RestReturn(value=Venue.class, 
         code={@RestCode(code=200, description="When found"), 
-        @RestCode(code=404, description="When no user exists for specified name", message="NOT FOUND")})
+        @RestCode(code=404, description="When no user exists for specified name", message="NOT FOUND")},
+        supportsClassParams = true)
     @RequestMapping(value="{name}", method= RequestMethod.GET)
     public ResponseEntity<Venue> findByName(@PathVariable String name) {
         
