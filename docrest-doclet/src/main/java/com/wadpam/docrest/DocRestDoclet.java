@@ -196,7 +196,7 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
         AnnotationTypeDoc type;
         for (ClassDoc classDoc : root.classes()) {
             Resource resource = new Resource();
-            System.out.println("==========================resources cccccccc==============  "+resources.size());
+            
             String paths[] = {""};
             for (AnnotationDesc classAnnotation : classDoc.annotations()) {
                 type = classAnnotation.annotationType();
@@ -238,7 +238,7 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
             }
 
         }
-        System.out.println("==========================resources ==============  "+resources.size());
+        
         vc.put("helper", this);
         vc.put("resources", resources);
         vc.put("encoder", new StringEscapeUtils());
