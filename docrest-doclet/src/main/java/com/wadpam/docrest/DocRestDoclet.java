@@ -19,9 +19,12 @@ import com.wadpam.docrest.domain.Method;
 import com.wadpam.docrest.domain.Param;
 import com.wadpam.docrest.domain.Resource;
 import com.wadpam.docrest.domain.RestReturn;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -183,7 +186,8 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
         final Collection<Resource> resources = new TreeSet<Resource>(new Comparator<Resource>() {
             @Override
             public int compare(Resource o1, Resource o2) {
-                return o1.getEntityType().compareToIgnoreCase(o2.getEntityType());
+                return o1.getName().compareToIgnoreCase(o2.getName());
+                //return o1.getEntityType().compareToIgnoreCase(o2.getEntityType());
 //                return o1.getPaths()[0].compareToIgnoreCase(o2.getPaths()[0]);
             }
         });
@@ -192,6 +196,7 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
         AnnotationTypeDoc type;
         for (ClassDoc classDoc : root.classes()) {
             Resource resource = new Resource();
+            System.out.println("==========================resources cccccccc==============  "+resources.size());
             String paths[] = {""};
             for (AnnotationDesc classAnnotation : classDoc.annotations()) {
                 type = classAnnotation.annotationType();
@@ -203,6 +208,8 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                     paths = getValue(classAnnotation, "value");
                 }
                 else if (RestReturn.class.getName().equals(type.qualifiedName())) {
+                    resource.setIncludeApi(true);
+                    resource.setName(classDoc.qualifiedName());
                     for (ElementValuePair element : classAnnotation.elementValues()) {
                         if ("value".equals(element.element().name())) {
                             final String className = element.value().value().toString();
@@ -224,20 +231,20 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
 
                 // traverse ancestors
                 boolean include = traverseAncestors(classDoc, resource);
-                if (include && null != resource.getEntityType()) {
+                //if (include && null != resource.getEntityType()) {
+                if (include && resource.isIncludeApi()) {
                     resources.add(resource);
                 }
             }
 
         }
-
+        System.out.println("==========================resources ==============  "+resources.size());
         vc.put("helper", this);
         vc.put("resources", resources);
-        StringEscapeUtils encoder;
         vc.put("encoder", new StringEscapeUtils());
         vc.put("jsonMap", jsonClassMap);
         vc.put("jsonDoc", jsonDocMap);
-        
+        vc.put("readme", getReadme());
         String path;
         Collection<Method> methods;
         for (Resource r : resources) {
@@ -326,6 +333,7 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
             if (null != method.getReturnType()) {
                 LOG.info("  ReturnType=" + method.getReturnType());
                 method.setJson(getJson(method.getReturnType(), method.getEntityType()));
+               // method.setJsonEntity(getJson(method.getReturnType(), null));
             }
         }
         return include;
@@ -677,4 +685,45 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
 
         return true;
     }
+    
+    protected static String getReadme() {
+
+        String fileName = "";
+        StringBuilder contents = new StringBuilder();
+        String line;
+        BufferedReader bReader = null;
+
+        // cross platforms
+        String[] pwd = System.getProperty("user.dir").split("/target/");
+        if (pwd.length > 0) {
+            fileName = pwd[0] + "/readme-docrest.txt";
+        }
+
+        try {
+            bReader = new BufferedReader(new FileReader(new File(fileName)));
+            while ((line = bReader.readLine()) != null) {
+                contents.append(line + "<br>");
+            }
+        }
+        catch (FileNotFoundException e) {
+            // e.printStackTrace();
+            LOG.info("readme-docrest.txt file directly under project directory will be used as top guideline of REST API.");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (bReader != null)
+                    bReader.close();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return contents.toString();
+    }
 }
+
+

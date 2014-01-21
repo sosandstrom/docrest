@@ -24,12 +24,23 @@ public class Resource {
     private String simpleType;
     
     private ClassDoc classDoc;
+    private String name;
     
     private Map<String, Collection<Method>> operationsMap = new TreeMap<String, Collection<Method>>();
     
     private final Set<Method> methods = new TreeSet<Method>();
 
     private int count;
+    
+    private boolean includeApi = false;
+    
+    public boolean isIncludeApi() {
+        return includeApi;
+    }
+
+    public void setIncludeApi(boolean includeApi) {
+        this.includeApi = includeApi;
+    }
     
     public ClassDoc getClassDoc() {
         return classDoc;
@@ -81,6 +92,14 @@ public class Resource {
 
     public void setOperationsMap(Map<String, Collection<Method>> operationsMap) {
         this.operationsMap = operationsMap;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

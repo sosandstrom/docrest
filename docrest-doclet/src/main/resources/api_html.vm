@@ -6,6 +6,12 @@
     <body>
 <!-- Table of Contents ---------------------------------------------------->
     	<h1>Content</h1>
+    	
+    	 #if( ${readme} )
+            <p>
+                ${readme}
+            </p>
+         #end 
     	<ul>
 #foreach( $resource in $resources )
             <li>
