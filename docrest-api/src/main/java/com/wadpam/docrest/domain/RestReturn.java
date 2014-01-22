@@ -20,7 +20,7 @@ public @interface RestReturn {
      * For method Annotation, this is the specific JSON response class.
      * @return 
      */
-    public Class value();
+    public Class value() default Object.class;
     
     /**
      * If response value is a list, this is the inner JSON response class
