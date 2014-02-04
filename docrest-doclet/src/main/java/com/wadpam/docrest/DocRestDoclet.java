@@ -293,11 +293,16 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                     method.setName(methodDoc.name());
                     method.setPaths(getValue(methodAnnotation, "value"));
                     String m[] = getValue(methodAnnotation, "method");
-                    if (1 == m.length) {
-                        method.setMethod(m[0]);
-                        if (m[0].startsWith("org.springframework.web.bind.annotation.RequestMethod.")) {
-                            method.setMethod(m[0].substring("org.springframework.web.bind.annotation.RequestMethod.".length()));
+                    StringBuilder methodType = new StringBuilder();
+                    if (m.length > 0 && m.length < 7) {
+                        for (int i = 0; i < m.length; i++) {
+                            if (m[i].startsWith("org.springframework.web.bind.annotation.RequestMethod.")) {
+                                methodType.append(m[i].substring("org.springframework.web.bind.annotation.RequestMethod.".length())+ ", ");
+                            }
                         }
+                        
+                        method.setMethod(methodType.toString().substring(0, methodType.length() - 2));
+                        
                     }
                     else {
                         method.setMethod("*");
