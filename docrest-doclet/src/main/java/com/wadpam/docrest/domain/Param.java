@@ -11,6 +11,8 @@ package com.wadpam.docrest.domain;
 public class Param {
     private String name;
     private String type;
+    private boolean required;
+    private String  defaultValue;
     private String comment;
 
     public String getComment() {
@@ -35,6 +37,22 @@ public class Param {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
     
     

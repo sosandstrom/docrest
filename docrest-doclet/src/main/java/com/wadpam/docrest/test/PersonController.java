@@ -36,7 +36,9 @@ public class PersonController extends AbstractController {
         @RestCode(code=404, description="When no user exists for specified name", message="NOT FOUND")},
         supportsClassParams = true)
     @RequestMapping(value="{name}", method= {RequestMethod.GET,RequestMethod.POST})
-    public ResponseEntity<Venue> findByName(@PathVariable String name) {
+    public ResponseEntity<Venue> findByName(@PathVariable String name,
+            @RequestParam(value="p1",defaultValue="staff") String position,
+            @RequestParam(value="p2") Boolean test) {
         
         return new ResponseEntity<Venue>(HttpStatus.NOT_FOUND);
     }

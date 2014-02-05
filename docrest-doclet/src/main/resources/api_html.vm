@@ -87,6 +87,8 @@
 	    		<td class="column1">Where</th>
 	    		<td class="column2">Name</th>
 	    		<td class="column3">Type</th>
+			<th class="column4">Required</th>
+                        <th class="column5">Default Value</th>
 	    		<td class="columnAuto">Description</th>
 			</thead>
 			<tbody>
@@ -94,13 +96,31 @@
 #foreach( $param in $method.pathVariables )
 #set( $hasNoRows = false )
                             <tr>
-                                <td>path</td><td>${param.name}</td><td>${param.type}</td><td>${param.comment}</td>
+                                <td>path</td>
+				<td>${param.name}</td>
+				<td>${param.type}</td>
+				<td></td>
+                                <td></td>
+				<td>${param.comment}</td>
                             </tr>
 #end
 #foreach( $param in $method.parameters )
 #set( $hasNoRows = false )
                             <tr>
-                                <td>query</td><td>${param.name}</td><td>${param.type}</td><td>${param.comment}</td>
+                                <td>query</td>
+				<td>${param.name}</td>
+				<td>${param.type}</td>
+				<td style="text-align: center; padding: 0;">
+                                    #if (${param.required})
+                                        X
+                                    #end
+                                </td>
+                                <td style="text-align: center; padding: 0;">
+                                    #set( $defaultValue = ${param.defaultValue} )
+                                    #set( $defaultValue = $defaultValue.replace('"','')) 
+                                    $defaultValue
+                                </td>
+				<td>${param.comment}</td>
                             </tr>
 #end
 #if( $method.isSupportsClassParams() )
@@ -108,25 +128,45 @@
 #set( $nameIndex = $tag.text().indexOf(" ") )
 #set( $typeIndex = $tag.text().lastIndexOf(" ") )
                             <tr>
-                                <td>query (resource)</td><td>${tag.text().substring(0, $nameIndex)}</td><td>${tag.text().substring($typeIndex)}</td><td>${tag.text().substring($nameIndex, $typeIndex)}</td>
+                                <td>query (resource)</td>
+				<td>${tag.text().substring(0, $nameIndex)}</td>
+				<td>${tag.text().substring($typeIndex)}</td>
+				<td></td>
+				<td></td>
+				<td>${tag.text().substring($nameIndex, $typeIndex)}</td>
                             </tr>
 #end
 #end
 #if( $method.body )
 #set( $hasNoRows = false )
                             <tr>
-                                <td>body</td><td>${method.body.name}</td><td>${helper.renderType($method.body.type)}</td><td>${method.body.comment}</td>
+                                <td>body</td>
+				<td>${method.body.name}</td>
+				<td>${helper.renderType($method.body.type)}</td>
+				<td></td>
+				<td></td>
+				<td>${method.body.comment}</td>
                             </tr>
 #end
 #foreach( $param in $method.modelAttributes )
 #set( $hasNoRows = false )
                             <tr>
-                                <td>body (properties separately)</td><td>${param.name}</td><td>${param.type}</td><td>${param.comment}</td>
+                                <td>body (properties separately)</td>
+				<td>${param.name}</td>
+				<td>${param.type}</td>
+				<td></td>
+				<td></td>
+				<td>${param.comment}</td>
                             </tr>
 #end
 #if( $hasNoRows )
                             <tr>
-                                <td>-</td><td>-</td><td>-</td><td>-</td>
+                                <td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
+				<td>-</td>
                             </tr>
 #end
 			</tbody>
