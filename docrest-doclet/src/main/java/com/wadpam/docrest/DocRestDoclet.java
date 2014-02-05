@@ -586,6 +586,10 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                 Param param = new Param();
                 param.setName(p.name());
                 param.setComment(getComment(methodDoc, p.name()));
+                // set as default
+                param.setRequired(true);
+                param.setDefaultValue("");
+                
                 if ("org.springframework.web.bind.annotation.PathVariable".equals(type.qualifiedName())) {
                     param.setType(p.typeName());
                     method.getPathVariables().add(param);
@@ -593,6 +597,24 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                     param.setType(p.typeName());
                     method.setBody(param);
                 } else if ("org.springframework.web.bind.annotation.RequestParam".equals(type.qualifiedName())) {
+                    
+                    for (ElementValuePair element : paramAnnotation.elementValues()) {
+                        /*if ("org.springframework.web.bind.annotation.RequestParam.value".equals(element.element()
+                                .qualifiedName())) {*/
+                        if ("value".equals(element.element().name())) {
+                            param.setName(element.value().value().toString());
+                         
+                        }
+                        else if ("org.springframework.web.bind.annotation.RequestParam.required".equals(element.element()
+                                .qualifiedName())) {
+                            param.setRequired(Boolean.valueOf(element.value().value().toString()));
+                        }
+                        else if ("org.springframework.web.bind.annotation.RequestParam.defaultValue".equals(element
+                                .element().qualifiedName())) {
+                            param.setDefaultValue(element.value().value().toString());
+                        }
+                    }
+                    
                     param.setType(p.typeName());
                     method.getParameters().add(param);
                 } else if ("org.springframework.web.bind.annotation.ModelAttribute".equals(type.qualifiedName())) {

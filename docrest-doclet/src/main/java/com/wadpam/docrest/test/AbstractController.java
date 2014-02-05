@@ -27,8 +27,8 @@ public class AbstractController<T> {
      */
     @RestReturn(value=List.class)
     @RequestMapping(value="", method= RequestMethod.GET)
-    public ResponseEntity<List<T>> findAll(@RequestParam(defaultValue="0") int offset,
-            @RequestParam(defaultValue="10") int limit) {
+    public ResponseEntity<List<T>> findAll(@RequestParam(defaultValue="0", required=false) int offset,
+            @RequestParam(defaultValue="10", required=false) int limit) {
         return new ResponseEntity<List<T>>(HttpStatus.NOT_FOUND);
     }
 
@@ -40,8 +40,8 @@ public class AbstractController<T> {
      */
     @RestReturn(value=List.class)
     @RequestMapping(value="", method= RequestMethod.POST)
-    public ResponseEntity<List<T>> findAllPost(@RequestParam(defaultValue="0") int offset,
-            @RequestParam(defaultValue="10") int limit) {
+    public ResponseEntity<List<T>> findAllPost(@RequestParam(defaultValue="0", required=false) int offset,
+            @RequestParam(defaultValue="10", required=false) int limit) {
         return new ResponseEntity<List<T>>(HttpStatus.NOT_FOUND);
     }
     
