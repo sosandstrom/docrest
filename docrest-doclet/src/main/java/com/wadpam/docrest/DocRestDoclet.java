@@ -612,6 +612,10 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                         else if ("org.springframework.web.bind.annotation.RequestParam.defaultValue".equals(element
                                 .element().qualifiedName())) {
                             param.setDefaultValue(element.value().value().toString());
+                            // defaultValue is provided, required should be set to false
+                            if (param.getDefaultValue()!=null) {
+                                param.setRequired(false);
+                            }
                         }
                     }
                     
