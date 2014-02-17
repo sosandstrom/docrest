@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,6 +62,18 @@ public class PersonController extends AbstractController {
     @RequestMapping(value="{name}", method= RequestMethod.POST)
     public ResponseEntity<Venue> update(@ModelAttribute Venue person, 
             @ModelAttribute Location location) {
+        return null;
+    }
+    
+    /**
+     * Method comment for update with @RequestBody
+     * @return 
+     */
+    @RestReturn(value=Venue.class, 
+        code={@RestCode(code=200, description="When found"), 
+        @RestCode(code=404, description="When no user exists for specified name", message="NOT FOUND")})
+    @RequestMapping(value="{name}/v2", method= RequestMethod.POST)
+    public ResponseEntity<Venue> updateAsRequestBody(@RequestBody Venue venue) {
         return null;
     }
 }
