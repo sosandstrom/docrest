@@ -595,7 +595,8 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                     method.getPathVariables().add(param);
                 } else if ("org.springframework.web.bind.annotation.RequestBody".equals(type.qualifiedName())) {
                     //param.setType(p.typeName());
-                    param.setType(getJson(p.type().qualifiedTypeName(), method.getEntityType()));
+                    param.setType(getJson(p.type().qualifiedTypeName(), null));
+                    
                     //getJson(method.getReturnType(), method.getEntityType())
                     method.setBody(param);
                     

@@ -73,7 +73,7 @@ public class PersonController extends AbstractController {
         code={@RestCode(code=200, description="When found"), 
         @RestCode(code=404, description="When no user exists for specified name", message="NOT FOUND")})
     @RequestMapping(value="{name}/v2", method= RequestMethod.POST)
-    public ResponseEntity<Venue> updateAsRequestBody(@RequestBody Venue venue) {
+    public ResponseEntity<String> updateAsRequestBody(@RequestBody Venue venue) {
         return null;
     }
 }
