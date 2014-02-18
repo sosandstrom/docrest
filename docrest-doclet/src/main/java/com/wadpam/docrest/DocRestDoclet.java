@@ -594,8 +594,13 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                     param.setType(p.typeName());
                     method.getPathVariables().add(param);
                 } else if ("org.springframework.web.bind.annotation.RequestBody".equals(type.qualifiedName())) {
-                    param.setType(p.typeName());
+                    //param.setType(p.typeName());
+                    param.setType(getJson(p.type().qualifiedTypeName(), null));
+                    
+                    //getJson(method.getReturnType(), method.getEntityType())
                     method.setBody(param);
+                    
+                    
                 } else if ("org.springframework.web.bind.annotation.RequestParam".equals(type.qualifiedName())) {
                     
                     for (ElementValuePair element : paramAnnotation.elementValues()) {
@@ -624,7 +629,7 @@ https://warburtons-test.appspot.com/oauth/wbt/authorize?client_id=localhost.gene
                 } else if ("org.springframework.web.bind.annotation.ModelAttribute".equals(type.qualifiedName())) {
                     param.setType(getJson(p.type().qualifiedTypeName(), null));
                     method.getModelAttributes().add(param);
-                }
+                } 
                 LOG.info("                    @" + type.name() + " " + param.getType() + " " + param.getName() + " /** " + param.getComment() + " */");
             }
         }
